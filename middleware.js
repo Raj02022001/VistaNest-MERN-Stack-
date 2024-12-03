@@ -1,4 +1,4 @@
-const listing = require("./models/listing.js")
+const Listing = require("./models/listing.js")
 const Review = require("./models/review.js")
 
 
@@ -21,7 +21,7 @@ module.exports.savedRedirectedUrl = (req,res,next)=>{
 
 module.exports.isOwner = async (req,res,next)=>{
   let {id} = req.params;
-  let listing = await listing.findById(id);
+  let listing = await Listing.findById(id);
   if(!listing.owner.equals(res.locals.currUser._id)){
     req.flash("error", "You are not the Owner of this listing")
     return res.redirect(`/listings/${id}`);

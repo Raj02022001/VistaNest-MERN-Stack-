@@ -11,7 +11,7 @@
     <div class="row mt-3">
         <div class="col-8 offset-2">
     <h3>Editing The Listings</h3>
-    <form method="post" action="/listings/<%=listing._id%>?_method=PUT">
+    <form method="post" action="/listings/<%=listing._id%>?_method=PUT" enctype="multipart/form-data">
         <div class="mb-3">
         <label for="title" class="form-label"> Title </label>
         <input type="text" value="<%= listing.title %>" name="listing[title]" class="form-control" >
@@ -41,8 +41,13 @@
         </div>
 
         <div class="mb-3">
-        <label for="image" class="form-label"> Image Link <Link></Link> </label>
-        <input type="text" value="<%= listing.image.url %>" name="listing[image]" class="form-control" >
+            Original Image Preview <br>
+            <img src="<%= originalImage %>" alt="">
+            </div>
+
+        <div class="mb-3">
+        <label for="image" class="form-label"> Upload New Image </label>
+        <input type="file"  name="listing[image]" class="form-control" >
         <!-- <div class="invalid-feedback">Image Link should be valid</div>  -->
         </div>
         

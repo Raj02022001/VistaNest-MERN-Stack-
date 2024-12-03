@@ -13,17 +13,24 @@ const upload = multer({ storage })
 
 
 //Validating
-const validateListing = (req,res,next)=>{
-    const {error} = listingschema.validate(req.body);
-    // console.log(result);
-    if(error){ 
-       let errmsg=  error.details.map((el) => el.message).join(", ");
-      throw new ExpressError(400, errmsg)
-      } else{
-        next();
-      }
-  };
+const validateListing = (req, res, next) => {
+  // Merge file data into req.body.listing if a file is uploaded
+  if (req.file) {
+    const { path: url, filename } = req.file;
+    req.body.listing = {
+      ...req.body.listing,
+      image: { url, filename },
+    };
+  }
 
+  const { error } = listingschema.validate(req.body);
+  if (error) {
+    const errmsg = error.details.map((el) => el.message).join(", ");
+    throw new ExpressError(400, errmsg);
+  } else {
+    next();
+  }
+};
 
 router.route("/")
 .get( wrapAsync(ListingController.index)) //Index Route
@@ -38,10 +45,21 @@ router.get("/new", isLoggedIn, ListingController.renderNerForm)
 
 router.route("/:id")
 .get( wrapAsync(ListingController.showListing)) //Show Route
-.put(validateListing ,isLoggedIn,isOwner,wrapAsync(ListingController.updateListing)) //Update Route
-.delete(isLoggedIn,isOwner,  wrapAsync(ListingController.deleteListing)) //Delete Route
+
+.put(isLoggedIn,
+  isOwner,
+  upload.single("listing[image]"),
+  validateListing ,
+  wrapAsync(ListingController.updateListing)) //Update Route
+
+.delete(isLoggedIn,
+  isOwner, 
+  wrapAsync(ListingController.deleteListing)) //Delete Route
 
 //Edit Route
-router.get("/:id/edit",isOwner,isLoggedIn, wrapAsync(ListingController.editListing))
+router.get("/:id/edit",
+  isLoggedIn, 
+  isOwner,
+  wrapAsync(ListingController.editListing))
 
 module.exports= router;

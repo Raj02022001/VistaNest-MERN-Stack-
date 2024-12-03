@@ -8,13 +8,12 @@ cloudinary.config({
 });
 
 const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-      folder: 'VistaNest_DEV',
-      allowedFormat: ["png", "jpg", "jpeg"],
-    },
-  });
-
+  cloudinary: cloudinary,
+  params: {
+    folder: 'VistaNest_DEV',
+    allowed_formats: ["png", "jpg", "jpeg"], // Correct key
+  },
+});
   
   module.exports = {
     cloudinary,
