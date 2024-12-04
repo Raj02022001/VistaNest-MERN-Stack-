@@ -26,11 +26,9 @@
   </form>
   </div>
   <% } %>
-
-
   <div class="col-6 offset-3 mb-3">
-    <hr>
     <% if (currUser) { %>
+      <hr>
     <h4>Leave a Review</h4>
     <form action="/listings/<%= listing._id %>/reviews" 
       method="POST" 
@@ -64,9 +62,10 @@
     </form>
     <hr>
     <% } %>
-    
-   <p><b>All Reviews</b></p>
+
+  <% if(listing.reviews.length>0) { %>
    <div class="row">
+    <p><b>All Reviews</b></p>
     <% for(review of listing.reviews) { %>
        <div class="card col-5 ms-3 mb-3">
         <div class="card-body">
@@ -78,11 +77,27 @@
           </form>
         </div>
        </div>
-     
-      <% } %> 
+      <% } %>
      </div>
+     <% } %>
     <script src="/js/script.js"></script>
   </div>
+  <div class="col-8 offset-3 mb-3">
+    <h3>Where you'll be</h3>
+    <div id="map"></div>
+  </div>
   </div>
  
  
+  <script>
+    let mapToken = "<%= process.env.MAP_TOKEN %>";
+    console.log(mapToken);
+    mapboxgl.accessToken = mapToken;
+      const map = new mapboxgl.Map({
+        container : "map",
+          style : "mapbox://styles/mapbox/streets-v12",
+         
+          center: [-74.5, 40], // starting position [lng, lat]. Note that lat must be set between -90 and 90
+          zoom: 9 // starting zoom
+      });
+  </script>
