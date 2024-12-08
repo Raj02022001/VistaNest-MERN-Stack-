@@ -7,7 +7,7 @@ const { savedRedirectedUrl } = require("../middleware.js");
 const userController = require("../controller/user.js");
 
 
-router.route("/singnup")
+router.route("/signup")
 .get(userController.renderSignupForm )
 .post(wrapAsync(userController.singupUser));
 

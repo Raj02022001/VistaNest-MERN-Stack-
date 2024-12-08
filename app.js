@@ -6,7 +6,14 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
-const MONGO_URL = "mongodb://127.0.0.1:27017/VistaNest";
+
+const MongoStore = require('connect-mongo');
+
+
+// const MONGO_URL = "mongodb://127.0.0.1:27017/VistaNest";
+
+const ATLASDB_URL = process.env.ATLAS_URL;
+
 const methodoveride = require("method-override");
 const EJSmate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js")
@@ -30,7 +37,7 @@ main()
   });
 
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(ATLASDB_URL);
 }
 
 app.set("view engine", "ejs");
@@ -41,7 +48,16 @@ app.engine("ejs", EJSmate)
 app.use(express.static(path.join(__dirname,"/public" )))
 app.use(cors());
 
+const store = MongoStore.create({
+  mongourl: ATLASDB_URL,
+  crypto :{
+    secret: "mysupersecretcode"
+  },
+  touchAfter: 24*3600,
+})
+
 const sessionOptions = {
+  store,
   secret: "mysupersecretcode",
   resave: false,
   saveUninitialized: true,
